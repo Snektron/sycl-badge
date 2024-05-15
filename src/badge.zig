@@ -48,6 +48,16 @@ pub const microzig_options = .{
     },
 };
 
+fn rect(desc: cart.api.RectOptions) void {
+    const nx: usize = @intCast(@min(@max(desc.x, 0), cart.api.screen_width));
+    const ny: usize = @intCast(@min(@max(desc.y, 0), cart.api.screen_height));
+    const xx: usize = @intCast(@min(@max(desc.x + @as(i32, @intCast(desc.width)), 0), cart.api.screen_width));
+    const xy: usize = @intCast(@min(@max(desc.y + @as(i32, @intCast(desc.height)), 0), cart.api.screen_height));
+    for (ny..xy) |y| {
+        @memset(cart.api.framebuffer[y * cart.api.screen_width..][nx..xx], desc.fill_color.?);
+    }
+}
+
 pub fn main() !void {
     SystemControl.CCR.modify(.{
         .NONBASETHRDENA = 0,
@@ -175,7 +185,9 @@ pub fn main() !void {
         },
     });
 
-    lcd.clear_screen(.{ .r = 31, .g = 0, .b = 0 });
+    lcd.clear_screen(.{ .r = 0, .g = 0, .b = 0 });
+    @memset(cart.api.framebuffer, .{.r = 0, .g = 0, .b = 0});
+    lcd.send_colors(@ptrCast(cart.api.framebuffer));
 
     const neopixels = board.Neopixels.init(board.D8_NEOPIX);
     adc.init();

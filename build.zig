@@ -61,13 +61,13 @@ pub fn build(b: *Build) void {
     feature_test_cart.install(b);
     const watch_run_step = feature_test_cart.install_with_watcher(&dep, b, .{});
 
-    const zeroman_cart = add_cart(&dep, b, .{
-        .name = "zeroman",
-        .optimize = optimize,
-        .root_source_file = .{ .path = "samples/zeroman/main.zig" },
-    });
-    add_zeroman_assets_step(b, zeroman_cart);
-    zeroman_cart.install(b);
+    // const zeroman_cart = add_cart(&dep, b, .{
+    //     .name = "zeroman",
+    //     .optimize = optimize,
+    //     .root_source_file = .{ .path = "samples/zeroman/main.zig" },
+    // });
+    // add_zeroman_assets_step(b, zeroman_cart);
+    // zeroman_cart.install(b);
 
     {
         const cart = add_cart(&dep, b, .{
@@ -87,7 +87,7 @@ pub fn build(b: *Build) void {
 
     inline for (.{
         "blinky",
-        //"blinky_timer",
+        "blinky_timer",
         //"usb_cdc",
         //"usb_storage",
         "buttons",
@@ -109,16 +109,16 @@ pub fn build(b: *Build) void {
         mz.install_firmware(b, mvp, .{ .format = .{ .uf2 = .SAMD51 } });
     }
 
-    inline for (.{
-        "neopixels",
-    }) |name| {
-        const mvp = add_cart(&dep, b, .{
-            .name = std.fmt.comptimePrint("badge.demo.{s}", .{name}),
-            .optimize = optimize,
-            .root_source_file = .{ .path = std.fmt.comptimePrint("src/badge/demos/{s}.zig", .{name}) },
-        });
-        mvp.install(b);
-    }
+    // inline for (.{
+    //     "neopixels",
+    // }) |name| {
+    //     const mvp = add_cart(&dep, b, .{
+    //         .name = std.fmt.comptimePrint("badge.demo.{s}", .{name}),
+    //         .optimize = optimize,
+    //         .root_source_file = .{ .path = std.fmt.comptimePrint("src/badge/demos/{s}.zig", .{name}) },
+    //     });
+    //     mvp.install(b);
+    // }
 
     const font_export_step = b.step("generate-font.ts", "convert src/font.zig to simulator/src/font.ts");
     font_export_step.makeFn = struct {

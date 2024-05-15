@@ -76,6 +76,9 @@ pub const Lcd = struct {
         lcd.pins.rst.write(.high);
         timer.delay_us(20 * std.time.us_per_ms);
 
+        lcd.send_cmd(0x4, &.{});
+
+
         // TODO: analyze this from the circuitpython repo:
         // uint8_t display_init_sequence[] = {
         //     0x01, 0 | DELAY, 150, // SWRESET
@@ -146,7 +149,7 @@ pub const Lcd = struct {
         return lcd;
     }
 
-    fn send_cmd(lcd: Lcd, cmd: u8, params: []const u8) void {
+    pub fn send_cmd(lcd: Lcd, cmd: u8, params: []const u8) void {
         lcd.pins.cs.write(.low);
         lcd.pins.dc.write(.low);
 
@@ -211,7 +214,7 @@ pub const Lcd = struct {
     }
 
     pub fn clear_screen(lcd: Lcd, color: Color16) void {
-        lcd.set_window(0, 0, 128, 160);
+        lcd.set_window(0, 0, 160, 128);
         lcd.send_color(color, 128 * 160);
     }
 
@@ -273,7 +276,7 @@ pub const Lcd = struct {
         lcd.send_cmd(ST7735.RAMWR, std.mem.asBytes(&lcd.bpp24), 1);
     }
 
-    fn start(lcd: Lcd) void {
+    pub fn start(lcd: Lcd) void {
         _ = lcd;
         //if (dma.enable) {
         //    send_cmd(ST7735.RAMWR, &.{}, 1);
@@ -283,7 +286,7 @@ pub const Lcd = struct {
         //}
     }
 
-    fn stop(lcd: Lcd) void {
+    pub fn stop(lcd: Lcd) void {
         _ = lcd;
         //if (dma.enable) {
         //    dma.stop_lcd();

@@ -1,6 +1,8 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
+pub const microzig = @import("microzig");
+
 // ┌───────────────────────────────────────────────────────────────────────────┐
 // │                                                                           │
 // │ Platform Constants                                                        │
@@ -232,14 +234,14 @@ pub inline fn rect(options: RectOptions) void {
             options.height,
         );
     } else {
-        asm volatile (" svc #4"
-            :
-            : [x] "{r0}" (options.x),
-              [y] "{r1}" (options.y),
-              [width] "{r2}" (options.width),
-              [height] "{r3}" (options.height),
-            : "memory"
-        );
+        // asm volatile (" svc #4"
+        //     :
+        //     : [x] "{r0}" (options.x),
+        //       [y] "{r1}" (options.y),
+        //       [width] "{r2}" (options.width),
+        //       [height] "{r3}" (options.height),
+        //     : "memory"
+        // );
     }
 }
 
